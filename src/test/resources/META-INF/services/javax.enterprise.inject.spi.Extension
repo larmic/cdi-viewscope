@@ -1,0 +1,2 @@
+org.jboss.weld.manager.WeldServletScopesSupportForSe
+de.larmic.cdi.context.ViewContextExtension
