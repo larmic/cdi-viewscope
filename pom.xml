@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.larmic</groupId>
+	<groupId>de.larmic.extension.cdi</groupId>
 	<artifactId>larmic-cdi-viewscope</artifactId>
-	<version>1.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <packaging>jar</packaging>
+
+    <name>larmic-cdi-viewscope-extension</name>
+    <description>A cdi view scope extension</description>
+    <version>1.0-SNAPSHOT</version>
+
+    <url>https://bitbucket.org/larmicBB/larmic-cdi-viewscope</url>
+
+    <licenses>
+        <license>
+            <name>MIT license</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Lars Michaelis</name>
+            <email>mail@larmic.de</email>
+        </developer>
+    </developers>
 
 	<scm>
 		<connection>scm:git:git@bitbucket.org:larmicBB/larmic-cdi-viewscope.git</connection>
@@ -14,52 +34,97 @@
 		<developerConnection>scm:git:git@bitbucket.org:larmicBB/larmic-cdi-viewscope.git</developerConnection>
 	</scm>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>sonatype-nexus-snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>sonatype-nexus-staging</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
 	<properties>
 		<default.encoding>UTF-8</default.encoding>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.version>3.0.0</maven.version>
-	</properties>
 
-	<repositories>
-		<repository>
-			<id>JBoss Nexus Repository</id>
-			<name>JBoss Nexus Repository</name>
-			<url>https://repository.jboss.org/nexus/content/repositories/releases</url>
-			<layout>default</layout>
-		</repository>
-		<repository>
-			<id>jboss-public-repository-group</id>
-			<name>JBoss Public Maven Repository Group</name>
-			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</snapshots>
-		</repository>
-	</repositories>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+
+        <!-- dependency versions -->
+        <testng.version>6.8.7</testng.version>
+        <arquillian-testng-container.version>1.0.3.Final</arquillian-testng-container.version>
+        <arquillian-weld-se-embedded-1.1.version>1.0.0.CR7</arquillian-weld-se-embedded-1.1.version>
+        <mockito-core.version>1.9.5</mockito-core.version>
+        <jsf-api.version>2.2.5</jsf-api.version>
+        <weld-core.version>2.1.1.Final</weld-core.version>
+
+        <!-- maven plugin dependency version -->
+        <maven-release-plugin.version>2.4.2</maven-release-plugin.version>
+        <maven-gpg-plugin.version>1.4</maven-gpg-plugin.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+                <configuration>
+                    <!-- see https://docs.sonatype.org/display/Repository/How+To+Generate+PGP+Signatures+With+Maven -->
+                    <mavenExecutorId>forked-path</mavenExecutorId>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <arguments>-Psonatype-oss-release -D${gpg.arguments}</arguments>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-core</artifactId>
-			<version>1.1.11.Final</version>
+			<version>${weld-core.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-api</artifactId>
-			<version>2.2.0-m09</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
-			<version>1.1-PRD</version>
+			<version>${jsf-api.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -67,25 +132,25 @@
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
-			<version>6.8</version>
+			<version>${testng.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.arquillian.testng</groupId>
 			<artifactId>arquillian-testng-container</artifactId>
-			<version>1.0.3.Final</version>
+			<version>${arquillian-testng-container.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.arquillian.container</groupId>
 			<artifactId>arquillian-weld-se-embedded-1.1</artifactId>
-			<version>1.0.0.CR6</version>
+			<version>${arquillian-weld-se-embedded-1.1.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>1.9.5</version>
+			<version>${mockito-core.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
