@@ -8,7 +8,7 @@
 
     <name>larmic-cdi-viewscope-extension</name>
     <description>A cdi view scope extension</description>
-    <version>1.0-Alpha1</version>
+    <version>1.0-Alpha2-SNAPSHOT</version>
 
     <url>https://bitbucket.org/larmicBB/larmic-cdi-viewscope</url>
 
@@ -30,7 +30,7 @@
 		<connection>scm:git:git@bitbucket.org:larmicBB/larmic-cdi-viewscope.git</connection>
 		<url>scm:git:git@bitbucket.org:larmicBB/larmic-cdi-viewscope.git</url>
 		<developerConnection>scm:git:git@bitbucket.org:larmicBB/larmic-cdi-viewscope.git</developerConnection>
-	  <tag>larmic-cdi-viewscope-1.0-Alpha1</tag>
+	  <tag>HEAD</tag>
   </scm>
 
     <distributionManagement>
