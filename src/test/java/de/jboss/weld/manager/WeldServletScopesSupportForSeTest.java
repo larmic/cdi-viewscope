@@ -44,8 +44,11 @@ public class WeldServletScopesSupportForSeTest extends Arquillian {
 
     @Deployment
     public static JavaArchive createdeployment() {
-        return ShrinkWrap.create(JavaArchive.class).addClass(RequestScopeBean.class).addClass(SessionScopeBean.class)
-                .addClass(ConversationScopeBean.class).addClass(ViewScopeBean.class)
+        return ShrinkWrap.create(JavaArchive.class)
+                .addClass(RequestScopeBean.class)
+                .addClass(SessionScopeBean.class)
+                .addClass(ConversationScopeBean.class)
+                .addClass(ViewScopeBean.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
     }
 
@@ -62,12 +65,11 @@ public class WeldServletScopesSupportForSeTest extends Arquillian {
         Assert.assertEquals("de.larmic.cdi.context.RequestScopeBean says hello", this.requestScopeBean.sayHello());
         Assert.assertEquals("de.larmic.cdi.context.SessionScopeBean says hello", this.sessionScopeBean.sayHello());
         Assert.assertEquals("de.larmic.cdi.context.ViewScopeBean says hello", this.viewScopeBean.sayHello());
-        Assert.assertEquals("de.larmic.cdi.context.ConversationScopeBean says hello",
-                this.conversationScopeBean.sayHello());
+        Assert.assertEquals("de.larmic.cdi.context.ConversationScopeBean says hello", this.conversationScopeBean.sayHello());
     }
 
     @Test(dependsOnMethods = {"testInjection", "testSayHello"})
-    public void testViewScope() {
+    public void testViewScopeDoesNotChange() {
         FacesContextMock.mockFacesContext();
 
         Assert.assertEquals(this.viewScopeBean.toString(), this.viewScopeBean.toString());
